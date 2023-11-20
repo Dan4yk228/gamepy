@@ -1,10 +1,13 @@
+# libraries import
+import pygame.mixer
 import random
 import os
 import pygame 
 from pygame.constants import QUIT, K_DOWN, K_RIGHT, K_UP, K_LEFT
 
 pygame.init()
-
+pygame.mixer.init()
+# main variables
 FPS = pygame.time.Clock()
 
 HEIGHT = 800
@@ -29,8 +32,19 @@ bg_move = 3
 IMAGE_PATH = "Goose"
 PLAYER_IMAGES = os.listdir(IMAGE_PATH)
 
+# music\
+    
+pygame.mixer.music.load('Маша Кондратенко - Ванька-Встанька.mp3')
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
+
+
+# objects
 player = pygame.image.load('player.png').convert_alpha()
 player_rect = player.get_rect()
+player_rect.x = 20
+player_rect.y = 350
 player_move_down = [0, 4]
 player_move_right = [4, 0]
 player_move_up = [0, -4]
@@ -40,18 +54,18 @@ player_move_left = [-4, 0]
 def create_enemy():
     enemy_size = (30,30)
     enemy = pygame.image.load('enemy.png').convert_alpha()
-    enemy_rect = pygame.Rect(WIDTH, random.randint(0, HEIGHT), *enemy_size)
+    enemy_rect = pygame.Rect(1030, random.randint(0, HEIGHT), *enemy_size)
     enemy_move = [random.randint(-8, -4),0]
     return [enemy, enemy_rect, enemy_move]
 
 def create_bonus():
     bonus_size = (30,30)
     bonus = pygame.image.load('bonus.png').convert_alpha()
-    bonus_rect = pygame.Rect(random.randint(0, WIDTH), 0, *bonus_size)
+    bonus_rect = pygame.Rect(random.randint(0, WIDTH), 10, *bonus_size)
     bonus_move = [0, random.randint(4,8)]
     return [bonus, bonus_rect, bonus_move]
 
-
+# events
 CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
 
@@ -61,6 +75,7 @@ pygame.time.set_timer(CREATE_BONUS, 3000)
 CHANGE_IMAGE = pygame.USEREVENT + 3
 pygame.time.set_timer(CHANGE_IMAGE, 200)
 
+# collections
 enemies = []
 
 bonuses = []
@@ -69,6 +84,7 @@ score = 0
 
 image_index = 0
 
+# main functions
 playing = True
 while playing:
     FPS.tick(120)
@@ -141,6 +157,3 @@ while playing:
     for bonus in bonuses:
         if bonus[1].top > HEIGHT:
             bonuses.pop(bonuses.index(bonus))
-    
-
-
